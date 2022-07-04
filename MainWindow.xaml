@@ -15,7 +15,7 @@
         <RadioButton x:Name="isBookRadio" GroupName="Type" Content="Ksiazka" HorizontalAlignment="Left" Height="22" Margin="3,156,0,0" VerticalAlignment="Top" Width="95" IsChecked="True" Checked="isBookRadio_Checked"/>
         <RadioButton x:Name="isMovieRadio" GroupName="Type" Content="Film" HorizontalAlignment="Left" Height="22" VerticalAlignment="Top" Width="96"  Margin="3,183,0,0" IsChecked="False" Checked="isMovieRadio_Checked"/>
         <TextBox x:Name="addItemAuthor" HorizontalAlignment="Left" Margin="197,198,0,0" TextWrapping="Wrap" Text="Dziady" VerticalAlignment="Top" Width="120" />
-        <Label x:Name="errorLabel" Content="" HorizontalAlignment="Left" Margin="32,291,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+        <Label x:Name="errorLabel" Content="" HorizontalAlignment="Left" Margin="3,295,0,0" VerticalAlignment="Top" FontWeight="Bold" Height="47" Width="239"/>
         <ListBox x:Name="libItemsList" HorizontalAlignment="Left" Height="218" Margin="332,59,0,0" VerticalAlignment="Top" Width="448" d:ItemsSource="{d:SampleData ItemCount=5}"/>
         <Label Content="Biblioteka:" HorizontalAlignment="Left" Margin="332,33,0,0" VerticalAlignment="Top"/>
         <RadioButton x:Name="isMagazineRadio" GroupName="Type" Content="Czasopismo" HorizontalAlignment="Left" Height="22" VerticalAlignment="Top" Width="96"  Margin="2,205,0,0" IsChecked="False" Checked="isMagazineRadio_Checked"/>
@@ -27,6 +27,8 @@
         <ListBox x:Name="rentalList" HorizontalAlignment="Left" Height="115" Margin="332,313,0,0" VerticalAlignment="Top" Width="448" d:ItemsSource="{d:SampleData ItemCount=5}"/>
         <Label x:Name="rentalLabel" Content="Wypozyczenia" HorizontalAlignment="Left" Height="31" Margin="332,282,0,0" VerticalAlignment="Top" Width="114"/>
         <Button x:Name="returnButton" Content="Zwroc" HorizontalAlignment="Left" Height="20" Margin="335,433,0,0" VerticalAlignment="Top" Width="108" Click="returnButton_Click"/>
+        <Button x:Name="toFileButton" Content="Do pliku" HorizontalAlignment="Left" Margin="63,370,0,0" VerticalAlignment="Top" Width="194" Click="toFileButton_Click"/>
+        <Button x:Name="fromFileButton" Content="Z Pliku" HorizontalAlignment="Left" Margin="63,395,0,0" VerticalAlignment="Top" Width="194" Click="fromFileButton_Click"/>
 
     </Grid>
 </Window>

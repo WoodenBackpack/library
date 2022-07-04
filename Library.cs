@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,8 +12,9 @@ namespace WpfApp1
 
         public Library()
         {
-            this.libraryDict = new Dictionary<LibraryItem, int>();
+            this.libraryListElements = new List<LibraryItemElement>();
             this.rentList = new List<Rental>();
+            this.ids = 0;
         }
 
         public void AddNewItem(string title, string extraInfo, string itemGroupName)
@@ -34,29 +36,29 @@ namespace WpfApp1
                 default:
                     throw new LibraryException("Nie można dodać przedmiotu, wybierz grupę");
             }
-            foreach (var it in libraryDict)
+            for (int i = 0; i < libraryListElements.Count; ++i)
             {
-                if (it.Key.IsSame(item))
+                if (libraryListElements[i].Item.IsSame(item))
                 {
-                    libraryDict[it.Key]++;
+                    libraryListElements[i].Num++;
                     return;
                 }
             }
-            libraryDict.Add(item, 1);
+            libraryListElements.Add(new LibraryItemElement(item, 1));
             ids++;
         }
 
         public void RemoveItem(int id)
         {
-            foreach (var it in libraryDict)
+            for (int i = 0; i < libraryListElements.Count; ++i)
             {
-                if (it.Key.Id() == id)
+                if (libraryListElements[i].Item.Id == id)
                 {
-                    if (it.Value == 0)
+                    if (libraryListElements[i].Num == 0)
                     {
-                        throw new LibraryException("W bibliotece nie przedmiotu o indeksie" + id + "lub jes wypozyczony");
+                        throw new LibraryException("W bibliotece nie ma przedmiotu o indeksie " + id + " lub jest juz wypozyczony");
                     }
-                    libraryDict[it.Key]--;
+                    libraryListElements[i].Num--;
                     return;
                 }
             }
@@ -64,16 +66,16 @@ namespace WpfApp1
 
         public void RentItem(int id, string name, string surname)
         {
-            foreach (var it in libraryDict)
+            for (int i = 0; i < libraryListElements.Count; ++i)
             {
-                if (it.Key.Id() == id)
+                if (libraryListElements[i].Item.Id == id)
                 {
-                    if (it.Value == 0)
+                    if (libraryListElements[i].Num == 0)
                     {
-                        throw new LibraryException("W bibliotece nie przedmiotu o indeksie" + id + "lub jes wypozyczony");
+                        throw new LibraryException("W bibliotece nie ma przedmiotu o indeksie " + id + " lub jest wypozyczony");
                     }
-                    libraryDict[it.Key]--;
-                    Rental rental = new Rental(it.Key, name, surname);
+                    libraryListElements[i].Num--;
+                    Rental rental = new Rental(libraryListElements[i].Item, name, surname);
                     rentList.Add(rental);
                     return;
                 }
@@ -84,42 +86,22 @@ namespace WpfApp1
         {
             foreach (var it in rentList)
             {
-                if (it.Item().Id() == id)
+                if (it.Item.Id == id)
                 {
-                    AddNewItem(it.Item().Title(), it.Item().GetExtraInfo(), it.Item().GroupCode());
+                    AddNewItem(it.Item.Title, it.Item.GetExtraInfo(), it.Item.GroupCode);
                     rentList.Remove(it);
                     return;
                 }
             }
-            throw new Exception("This Item was not rent!");
-        }
-
-        public void ShowAll()
-        {
-            foreach (var it in libraryDict)
-            {
-                System.Console.WriteLine("num: " + it.Value + " " + it.Key.Desc());
-            }
-        }
-
-        public string GetItemDescAndNumber(int id)
-        {
-            foreach (var it in libraryDict)
-            {
-                if (it.Key.Id() == id)
-                {
-                    return "num: " + it.Value + " " + it.Key.Desc();
-                }
-            }
-            return "";
+            throw new Exception("Ten przedmiot nie byl wypozyczony");
         }
 
         public List<string> GetAllDesc()
         {
             List<string> elements = new List<string>();
-            foreach (var it in libraryDict)
+            foreach (var it in libraryListElements)
             {
-                elements.Add("num: " + it.Value + " " + it.Key.Desc());
+                elements.Add("num: " + it.Num + "," + it.Item.Desc());
             }
             return elements;
 
@@ -130,14 +112,16 @@ namespace WpfApp1
             List<string> elements = new List<string>();
             foreach (var it in rentList)
             {
-                elements.Add(it.Name() + " " + it.Surname() + " " + it.Item().Desc());
+                elements.Add(it.Name + " " + it.Surname + " " + it.Item.Desc());
             }
             return elements;
 
         }
-
-        Dictionary<LibraryItem, int> libraryDict;
-        List<Rental> rentList;
-        int ids = 0;
-    }
+        [JsonProperty]
+        public List<LibraryItemElement> libraryListElements { get; }
+        [JsonProperty]
+        public List<Rental> rentList { get; }
+        [JsonProperty]
+        public int ids { get; set; }
+}
 }

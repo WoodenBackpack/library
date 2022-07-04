@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,25 +11,23 @@ namespace WpfApp1
     {
         public Magazine(string title, string number, int id) : base(id, "MAG", title)
         {
-            this.number = number;
+            MagNumber = number;
         }
-
-        private string number;
-
-        public string Number() { return number; }
+        [JsonProperty("number ")]
+        private string MagNumber { get; set; }
 
         public override string Desc()
         {
-            return "MAGAZINE " + id.ToString() + " NUMBER: " + Number() + " TITLE: " + title;
+            return "MAGAZINE: " + Id.ToString() + ",NUMBER: " + MagNumber + ",TITLE: " + Title;
         }
 
         public override bool IsSame(LibraryItem it)
         {
-            if (it.GroupCode() == "MAG")
+            if (it.GroupCode == "MAG")
             {
                 Magazine thesis = (Magazine)it;
-                if (thesis.Number() == Number() &&
-                    thesis.Title() == title)
+                if (thesis.MagNumber == MagNumber &&
+                    thesis.Title == Title)
                 {
                     return true;
                 }
@@ -38,7 +37,7 @@ namespace WpfApp1
 
         public override string GetExtraInfo()
         {
-            return Number();
+            return MagNumber;
         }
     }
 }

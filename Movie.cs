@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,25 +11,24 @@ namespace WpfApp1
     {
         public Movie(string title, string director, int id) : base(id, "MOV", title)
         {
-            this.director = director;
+            Director = director;
         }
+        [JsonProperty("Director ")]
+        private string Director { get; set; }
 
-        private string director;
-
-        public string Director() { return director; }
 
         public override string Desc()
         {
-            return "MOVIE " + id.ToString() + " DIRECTOR: " + director + " TITLE: " + title;
+            return "MOVIE: " + Id.ToString() + ",DIRECTOR: " + Director + ",TITLE: " + Title;
         }
 
         public override bool IsSame(LibraryItem it)
         {
-            if (it.GroupCode() == "MOV")
+            if (it.GroupCode == "MOV")
             {
                 Movie movie = (Movie)it;
-                if (movie.Director() == director &&
-                    movie.Title() == title)
+                if (movie.Director == Director &&
+                    movie.Title == Title)
                 {
                     return true;
                 }
@@ -38,7 +38,7 @@ namespace WpfApp1
 
         public override string GetExtraInfo()
         {
-            return director;
+            return Director;
         }
     }
 }

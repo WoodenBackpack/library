@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,7 @@ namespace WpfApp1
             this.authors = authors.Split(',').ToList();
         }
 
+        [JsonProperty]
         private List<string> authors;
 
         public string Authors() {
@@ -27,16 +29,16 @@ namespace WpfApp1
 
         public override string Desc()
         {
-            return "THESIS " + id.ToString() + " AUTHORS: " + Authors() + " TITLE: " + title;
+            return "THESIS: " + Id.ToString() + ",AUTHORS: " + Authors() + ",TITLE: " + Title;
         }
 
         public override bool IsSame(LibraryItem it)
         {
-            if (it.GroupCode() == "THESIS")
+            if (it.GroupCode == "THESIS")
             {
                 Thesis thesis = (Thesis)it;
                 if (thesis.Authors() == Authors() &&
-                    thesis.Title() == title)
+                    thesis.Title == Title)
                 {
                     return true;
                 }

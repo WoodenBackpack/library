@@ -18,7 +18,5 @@ namespace WpfApp1
         List<string> GetAllDesc();
         List<string> GetAllRents();
 
-        string GetItemDescAndNumber(int id);
-
     }
 }

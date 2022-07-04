@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,16 +11,15 @@ namespace WpfApp1
     {
         public Rental(LibraryItem item, string name, string surname)
         {
-            this.item = item;
-            this.name = name;
-            this.surname = surname;
+            Item = item;
+            Name = name;
+            Surname = surname;
         }
-
-        private LibraryItem item;
-        private string name;
-        private string surname;
-        public LibraryItem Item() { return item; }
-        public string Name() { return name; }
-        public string Surname() { return surname; }
+        [JsonProperty]
+        public LibraryItem Item { get; }
+        [JsonProperty]
+        public string Name { get; }
+        [JsonProperty]
+        public string Surname { get; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,25 +7,29 @@ using System.Threading.Tasks;
 
 namespace WpfApp1
 {
+    [JsonConverter(typeof(LibraryItemConverter))]
     abstract class LibraryItem
     {
-        protected string groupCode;
-        protected string title;
-        protected int id;
-
+        
+        [JsonProperty]
+        public string GroupCode { get; set; }
+        [JsonProperty]
+        public string Title { get; set; }
+        [JsonProperty]
+        public int Id { get; set; }
+        
+        [JsonConstructor]
         protected LibraryItem(int id, string groupCode, string title)
         {
-            this.id = id;
-            this.groupCode = groupCode;
-            this.title = title;
+            Id = id;
+            GroupCode = groupCode;
+            Title = title;
         }
-        public int Id() { return id; }
-
-        public string Title() { return title; }
-        public string GroupCode() { return groupCode; }
         public abstract string Desc();
         public abstract string GetExtraInfo();
 
         public abstract bool IsSame(LibraryItem it);
     }
+
+
 }

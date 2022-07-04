@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Text.Json;
 
 namespace WpfApp1
 {
@@ -25,6 +26,8 @@ namespace WpfApp1
             InitializeComponent();
             lib = new Library();
         }
+
+        private ILibrary lib;
 
         private void addItemButton_Click(object sender, RoutedEventArgs e)
         {
@@ -65,7 +68,7 @@ namespace WpfApp1
             if (nameTextBox.Text.Length > 0 && surnameTextBox.Text.Length > 0 &&
                 libItemsList.SelectedItem != null)
             {
-                int idx = int.Parse(libItemsList.SelectedItem.ToString().Split(' ')[3]);
+                int idx = int.Parse(libItemsList.SelectedItem.ToString().Split(',')[1].Split(':')[1]);
                 try {
                     lib.RentItem(idx, nameTextBox.Text, surnameTextBox.Text);
                 }
@@ -91,16 +94,13 @@ namespace WpfApp1
             {
                 rentalList.Items.Add(el);
             }
-
         }
-
-        private readonly ILibrary lib;
 
         private void returnButton_Click(object sender, RoutedEventArgs e)
         {
             if (rentalList.SelectedItem != null)
             {
-                int idx = int.Parse(rentalList.SelectedItem.ToString().Split(' ')[3]);
+                int idx = int.Parse(rentalList.SelectedItem.ToString().Split(',')[0].Split(':')[1]);
                 string name = rentalList.SelectedItem.ToString().Split(' ')[0];
                 string surname = rentalList.SelectedItem.ToString().Split(' ')[1];
                 try
@@ -145,6 +145,37 @@ namespace WpfApp1
             {
                 ExtraLabel.Content = "Autor";
             }
+        }
+
+        private void toFileButton_Click(object sender, RoutedEventArgs e) 
+        {
+            Microsoft.Win32.SaveFileDialog openFileDlg = new Microsoft.Win32.SaveFileDialog();
+            Nullable<bool> result = openFileDlg.ShowDialog();
+            if (result == true)
+            {
+                MyJsonSerializer<Library> serializer = new MyJsonSerializer<Library>();
+                string text = serializer.Serialize((Library)lib);
+                System.IO.StreamWriter writer = new System.IO.StreamWriter(openFileDlg.FileName);
+                writer.Write(text);
+                writer.Close();
+            }
+
+
+        }
+
+        private void fromFileButton_Click(object sender, RoutedEventArgs e)
+        {
+            Microsoft.Win32.OpenFileDialog openFileDlg = new Microsoft.Win32.OpenFileDialog();
+            Nullable<bool> result = openFileDlg.ShowDialog();
+            if (result == true)
+            {
+                System.IO.StreamReader reader = new System.IO.StreamReader(openFileDlg.FileName);
+                MyJsonSerializer<Library> serializer = new MyJsonSerializer<Library>();
+                ILibrary libToRead = serializer.Deserialize(reader.ReadToEnd());
+                lib = libToRead;
+                reader.Close();
+            }
+            reloadLists();
         }
     }
 }
